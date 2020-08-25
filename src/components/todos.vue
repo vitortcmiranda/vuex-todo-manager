@@ -1,29 +1,40 @@
 <template>
   <div>
-    <h3>Todos</h3>
-    <div v-for="todo in allTodos" :key="todo.id" class="todo">
-      {{ todo.title }}
-      <i @click="deleteTodo(todo.id)" class="fa fa-trash" aria-hidden="true"></i>
+    <div class="row">
+      <div class="clearTodos">
+        <input type="submit" @click="clearAll()"  value="Clear All" />
       </div>
+      <div v-for="todo in allTodos" :key="todo.id" class="todo">
+        {{ todo.title }}
+        <i @click="deleteTodo(todo.id)" class="fa fa-trash" aria-hidden="true"></i>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from  'vuex'
+import { mapGetters, mapActions } from "vuex";
 
 export default {
-    name: 'Todos',
-    methods: {
-      ...mapActions(['fetchTodos','deleteTodo'])
-    },
-    computed: mapGetters(['allTodos']),
-    created () {
-      this.fetchTodos()
-    }
-}
+  name: "Todos",
+  methods: {
+    ...mapActions(["fetchTodos", "deleteTodo", "clearAll"]),
+  },
+  computed: mapGetters(["allTodos"]),
+  created() {
+    this.fetchTodos();
+  },
+};
 </script>
 
 <style scoped>
+input[type="submit"] {
+  flex: 2;
+  background: #41b883;
+  color: #fff;
+  border: 1px #41b883 solid;
+  cursor: pointer;
+}
 .todos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -71,5 +82,4 @@ i {
     grid-template-columns: 1fr;
   }
 }
-
 </style>
