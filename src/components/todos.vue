@@ -17,7 +17,9 @@
       @dblclick="onDblClick(todo)"
       v-for="todo in allTodos" 
       :key="todo.id"
-       class="todo">
+      class="todo"
+      v-bind:class="{'is-complete':todo.completed}" 
+       >
         {{ todo.title }}
         <i @click="deleteTodo(todo.id)" class="fa fa-trash" aria-hidden="true"></i>
       </div>
@@ -31,7 +33,16 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Todos",
   methods: {
-    ...mapActions(["fetchTodos", "deleteTodo", "clearAll"]),
+    ...mapActions(["fetchTodos", "deleteTodo", "clearAll", "updateTodo"]),
+    onDblClick(todo) {
+      const updTodo ={
+        id: todo.id,
+        title: todo.title,
+        completed: !todo.completed
+      }
+      console.log(updTodo)
+      this.updateTodo(updTodo)
+    }
   },
   computed: mapGetters(["allTodos"]),
   created() {
