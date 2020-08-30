@@ -4,7 +4,20 @@
       <div class="clearTodos">
         <input type="submit" @click="clearAll()"  value="Clear All" />
       </div>
-      <div v-for="todo in allTodos" :key="todo.id" class="todo">
+      <div class="legend">
+      <span>Double click to mark as complete</span>
+      <span>
+        <span class="incomplete-box"></span> = Incomplete
+      </span>
+      <span>
+        <span class="complete-box"></span> = Complete
+      </span>
+    </div>
+      <div 
+      @dblclick="onDblClick(todo)"
+      v-for="todo in allTodos" 
+      :key="todo.id"
+       class="todo">
         {{ todo.title }}
         <i @click="deleteTodo(todo.id)" class="fa fa-trash" aria-hidden="true"></i>
       </div>

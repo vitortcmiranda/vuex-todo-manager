@@ -1,17 +1,22 @@
 import axios from 'axios'
 
 const state = {
-    todos : []
+    todos : [],
+    limit: 0
 }
 
 const getters = {
-    allTodos: (state) => state.todos
+    allTodos: (state) => state.todos,
+    todosCount:(state) => {
+        return Object.keys(state.todos).length
+    }
 }
 
 const actions = {
     async fetchTodos({ commit }){
         const response = await axios.get('http://jsonplaceholder.typicode.com/todos')
         commit('setTodos', response.data)
+        console.log('fetching todos')
     },
     async addTodo({ commit }, title){
         const response = await axios.post('http://jsonplaceholder.typicode.com/todos',{title, completed: false})
@@ -26,28 +31,34 @@ const actions = {
     async filterTodos({ commit }, e) {
         // get the selected number 
         const limit = parseInt(e.target.options[e.target.options.selectedIndex].innerText)
-        const array = ['']
-        for (let index = 0; index < limit; index++) {      
-            array.push(state.todos[index])            
-        }
-        commit('setTodos',array)
+        commit('filterTodo',limit)
+    },
+    async filterTodosN({ commit }, val) {
+        // get the selected number
+        const limit = parseInt(val) 
+        commit('filterTodo',limit)
     },
     async clearAll({ commit }) {
         commit('clearAll')
+    },
+    async updateTodo({ commit }, updTodo) {
+        const response = await axios.put(`http://jsonplaceholder.typicode.com/todos/${updTodo.id}`)
+        commit('updTodo',response)
+
     }
 }
 
 const mutations = {
-    setTodos: (state, todos) => (state.todos = todos),
-    filterTdoos: (state, limit) => (state.todos = state.todos.map(function(x){
-        for (let index = 0; index < limit; index++) {
-            x = state.todo.todo[index]
-            return x
-        }
-    })),
+    setTodos: (state, todos) => (state.todos = todos),   
     newTodo: (state, todo) => state.todos.unshift(todo),
+    filterTodo: (state, limit) => state.todos = state.todos.filter(todo => todo.id <= limit),
     removeTodo: (state, id) => state.todos = state.todos.filter(todo => todo.id !==id),
-    clearAll: (state) => state.todos = []
+    clearAll: (state) => state.todos = [],
+    updTodo: (state,updTodo) => {
+        const index = state.todos.findIndex(todo => todo.id === updTodo.id)
+        console.log(index)
+        // if(index !== -1)
+    }
 }
 
 export default {
